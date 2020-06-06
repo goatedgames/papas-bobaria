@@ -1,10 +1,15 @@
 import Phaser from "phaser";
-import BaseScene from './scenes/BaseScene';
+import OrderScene from './scenes/OrderScene';
+import BrewScene from './scenes/BrewScene';
+import ToppingScene from './scenes/ToppingScene';
+import ServeScene from './scenes/ServeScene';
+
+import { WIDTH, HEIGHT } from './constants';
 
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: WIDTH,
+  height: HEIGHT,
   parent: "game-container",
   physics: {
     default: 'arcade',
@@ -13,7 +18,17 @@ const config = {
       debug: false
     }
   },
-  scene: [ BaseScene ]
+  scene: [
+    OrderScene,
+    BrewScene,
+    ToppingScene,
+    ServeScene
+  ]
 };
 
-const game = new Phaser.Game(config);
+let game = new Phaser.Game(config);
+// game.scene.add('OrderScene', OrderScene);
+// game.scene.add('BrewScene', BrewScene);
+// game.scene.add('ToppingScene', ToppingScene);
+// game.scene.add('ServeScene', ServeScene);
+// game.scene.start('OrderScene');
