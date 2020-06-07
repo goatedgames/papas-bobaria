@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import { WIDTH, HEIGHT } from '../constants';
+import { Order } from '../Order';
 
 class OrderScene extends Phaser.Scene {
   customers = [];
@@ -20,38 +21,6 @@ class OrderScene extends Phaser.Scene {
     this.add.image(WIDTH / 2, HEIGHT / 2, 'sky');
 
     this.addCustomer();
-    this.add.text(50, 50, 'Order Station');
-
-    this.add.text(500, 550, 'Brewing Station')
-      .setInteractive()
-      .on('pointerdown', () => {
-        if (this.scene.isActive('BrewScene')) {
-          this.scene.bringToTop('BrewScene');
-        } else {
-          this.scene.launch('BrewScene');
-        }
-      });
-    
-    this.add.text(300, 550, 'Topping Station')
-      .setInteractive()
-      .on('pointerdown', () => {
-        if (this.scene.isActive('ToppingScene')) {
-          this.scene.bringToTop('ToppingScene');
-        } else {
-          this.scene.launch('ToppingScene');
-        }
-      });
-    
-    this.add.text(100, 550, 'Serving Station')
-      .setInteractive()
-      .on('pointerdown', () => {
-        if (this.scene.isActive('ServeScene')) {
-          this.scene.bringToTop('ServeScene');
-        } else {
-          this.scene.launch('ServeScene');
-        }
-      });
-    
     
     this.takeOrderButton = this.add.text(300, HEIGHT / 2, 'Take Order', { fill: '#0f0' })
       .setInteractive()
@@ -79,21 +48,29 @@ class OrderScene extends Phaser.Scene {
         }
       } else {
         if (this.customers[i] !== null)
-          this.customers[i].setVelocityX(-100);
+          this.customers[i].setVelocityX(-200);
       }
     }
   }
 
   addCustomer() {
     const cust = this.physics.add.sprite(WIDTH + 10, HEIGHT / 2, 'star');
-    cust.setVelocityX(-100);
+    cust.setVelocityX(-200);
     this.customers.push(cust);
   }
 
   dequeFirstCustomer() {
+    let o = this.createRandomOrder();
+    this.scene.get('Tickets').addTicket(o);
     this.customers[0].visible = false;
     this.customers.shift();
     this.takeOrderButton.visible = false;
+  }
+
+  createRandomOrder() {
+    let o = new Order();
+    o.addTopping('pearls');
+    return o;
   }
 }
 

@@ -1,4 +1,7 @@
 import Phaser from "phaser";
+import Loader from './scenes/Loader';
+import Switcher from './scenes/Switcher';
+import Tickets from './scenes/Tickets';
 import OrderScene from './scenes/OrderScene';
 import BrewScene from './scenes/BrewScene';
 import ToppingScene from './scenes/ToppingScene';
@@ -19,6 +22,9 @@ const config = {
     }
   },
   scene: [
+    Loader,
+    Switcher,
+    Tickets,
     OrderScene,
     BrewScene,
     ToppingScene,
