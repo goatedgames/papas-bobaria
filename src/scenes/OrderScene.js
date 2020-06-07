@@ -6,6 +6,8 @@ import { Order } from '../Order';
 class OrderScene extends Phaser.Scene {
   customers = [];
   takeOrderButton;
+  lastCustomer = 0;
+  currentNum = 1;
 
   constructor() {
     super({ key: 'OrderScene' });
@@ -32,7 +34,7 @@ class OrderScene extends Phaser.Scene {
     this.mytext = this.add.text(400, 300, '', { fill: '#0f0' })
   }
 
-  update() {
+  update(time) {
     for (let i = 0; i < this.customers.length; i++) {
       let limit;
       if (i == 0) {
@@ -51,12 +53,17 @@ class OrderScene extends Phaser.Scene {
           this.customers[i].setVelocityX(-200);
       }
     }
+
+    if (this.customers.length < 5 && Math.random() < 0.01 && (time - this.lastCustomer) > 5000) {
+      this.addCustomer();
+    }
   }
 
   addCustomer() {
     const cust = this.physics.add.sprite(WIDTH + 10, HEIGHT / 2, 'star');
     cust.setVelocityX(-200);
     this.customers.push(cust);
+    this.lastCustomer = this.time.now;
   }
 
   dequeFirstCustomer() {
@@ -68,8 +75,16 @@ class OrderScene extends Phaser.Scene {
   }
 
   createRandomOrder() {
-    let o = new Order();
-    o.addTopping('pearls');
+    let o = new Order(this.currentNum++);
+    const possible = ['pearls', 'lychee jelly', 'mango jelly'];
+    for (let choice of possible) {
+      if (Math.random() < 0.5) {
+        o.addTopping(choice);
+      }
+    }
+    o.tea = Math.round(Math.random() * 25 + 75);
+    o.milk = Math.round(Math.random() * 50 + 50);
+    o.syrup = Math.round(Math.random() * 100);
     return o;
   }
 }

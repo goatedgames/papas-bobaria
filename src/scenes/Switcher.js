@@ -21,6 +21,7 @@ class Switcher extends Phaser.Scene {
         this.scene.bringToTop('Tickets');
         this.clearAll();
         this.buttons.orderButton.setColor('black');
+        this.scene.get('Tickets').hideServe();
       });
     this.buttons.orderButton.setColor('black');
     
@@ -32,6 +33,7 @@ class Switcher extends Phaser.Scene {
         this.scene.bringToTop('Tickets');
         this.clearAll();
         this.buttons.brewButton.setColor('black');
+        this.scene.get('Tickets').hideServe();
       })
     
     this.buttons.topButton = this.add.text(250, 550, 'Topping\nStation')
@@ -42,6 +44,7 @@ class Switcher extends Phaser.Scene {
         this.scene.bringToTop('Tickets');
         this.clearAll();
         this.buttons.topButton.setColor('black');
+        this.scene.get('Tickets').hideServe();
       });
     
     this.buttons.serveButton = this.add.text(350, 550, 'Serving\nStation')
@@ -52,6 +55,7 @@ class Switcher extends Phaser.Scene {
         this.scene.bringToTop('Tickets');
         this.clearAll();
         this.buttons.serveButton.setColor('black');
+        this.scene.get('Tickets').showServe();
       });
   }
 

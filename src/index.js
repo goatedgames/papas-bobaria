@@ -6,6 +6,7 @@ import OrderScene from './scenes/OrderScene';
 import BrewScene from './scenes/BrewScene';
 import ToppingScene from './scenes/ToppingScene';
 import ServeScene from './scenes/ServeScene';
+import ReviewScene from './scenes/ReviewScene';
 
 import { WIDTH, HEIGHT } from './constants';
 
@@ -28,7 +29,8 @@ const config = {
     OrderScene,
     BrewScene,
     ToppingScene,
-    ServeScene
+    ServeScene,
+    ReviewScene
   ]
 };
 

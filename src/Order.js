@@ -1,9 +1,14 @@
 export class Order {
-  constructor() {
+  constructor(num) {
     this._tea = 100;
     this._milk = 25;
     this._syrup = 25;
     this._toppings = [];
+    this._num = num;
+  }
+
+  get num() {
+    return this._num;
   }
 
   set tea(tea) {

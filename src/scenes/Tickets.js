@@ -5,7 +5,9 @@ import { Order } from '../Order';
 
 class Tickets extends Phaser.Scene {
   tickets = [];
-  currentNum = 1;
+  serveArea;
+  lastSelected;
+  selectedOrder;
 
   constructor() {
       super({ key: 'Tickets' });
@@ -15,10 +17,24 @@ class Tickets extends Phaser.Scene {
   }
 
   create() {
+    this.add.text(20, 20, 'Tickets');
+
+    let components = [];
+    let serveBox = this.add.rectangle(0, 0, 75, 150, '0xdddddd')
+        .setStrokeStyle(2, '0f5f5f5');
+
+    components.push(
+      serveBox,
+      this.add.text(-30, 0, 'Drag to\nServe')
+    );
+
+    // This is hacky, but I don't know any other way to move the gameObject between scenes
+    this.serveArea = this.add.container(75, 150, components)
+      .setPosition(400, 300);
+    this.serveArea.setVisible(false);
   }
 
   update() {
-
   }
 
   findEmptySpot() {
@@ -40,7 +56,7 @@ class Tickets extends Phaser.Scene {
     components.push(bg);
 
     components.push(
-      this.add.text(-60, -135, 'Order #' + this.currentNum++)
+      this.add.text(-60, -135, 'Order #' + order.num)
         .setFontStyle('bold')
         .setColor(black),
       this.add.text(-60, -100, 'Tea: ' + order.tea + '%')
@@ -58,7 +74,7 @@ class Tickets extends Phaser.Scene {
     let offset = 20;
     for (let top of order.toppings) {
       components.push(
-        this.add.text(-40, -25 + offset, top)
+        this.add.text(-50, -25 + offset, top)
           .setColor(black)
       );
       offset += 20;
@@ -79,9 +95,43 @@ class Tickets extends Phaser.Scene {
       } else {
         t.setScale(0.3, 0.3);
       }
+      this.lastSelected = t;
+    });
+    this.input.on('dragend', (pointer, dragX, dragY, dropped) => {
+      if (this.lastSelected === null) {
+        return;
+      }
+
+      if (this.serveArea.visible && Phaser.Geom.Rectangle.ContainsRect(
+        this.serveArea.getBounds(),
+        this.lastSelected.getBounds()
+      )) {
+        this.scene.switch('ReviewScene');
+        this.scene.bringToTop('ReviewScene');
+        this.selectedOrder = this.lastSelected.getData('order');
+        // this.data.set('gOrder', this.lastSelected.getData('order'));
+        this.lastSelected = null;
+        for (let i = 0; i < this.tickets.length; i++) {
+          if (this.selectedOrder.num === this.tickets[i].getData('order').num) {
+            this.tickets[i].destroy();
+            this.tickets.splice(i, 1);
+            break;
+          }
+        }
+        console.log(this.tickets);
+      }
     });
 
+    cont.setData('order', order);
     this.tickets.push(cont);
+  }
+
+  showServe() {
+    this.serveArea.setVisible(true);
+  }
+
+  hideServe() {
+    this.serveArea.setVisible(false);
   }
 }
 
