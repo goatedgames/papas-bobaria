@@ -1,7 +1,12 @@
 export default class Topping {
-  constructor(id, tex) {
+  constructor(id, tex, scale) {
     this._id = id;
     this._tex = tex;
+    this._x = 0;
+    this._y = 0;
+    this._rot = 0;
+    this._bound = null;
+    this._scale = scale;
   }
 
   get pObj() {
@@ -16,41 +21,43 @@ export default class Topping {
     return this._id;
   }
 
-  get tea() {
-    return this._tea;
-  }
-
-  get milk() {
-    return this._milk;
-  }
-
-  get syrup() {
-    return this._syrup;
-  }
-
-  addTea(delta) {
-    this._tea = Math.min(100, this._tea + delta);
-  }
-
-  addMilk(delta) {
-    this._milk = Math.min(100, this._milk + delta);
-  }
-
-  addSyrup(delta) {
-    this._syrup = Math.min(100, this._syrup + delta);
-  }
-
   get tex() {
     return this._tex;
   }
 
-  updateTexture() {
-    // Weight the tea more than milk/syrup
-    let per = 4.0 * (3 * this._tea + 2 * this._milk + this._syrup) / 600.0;
-    per = Math.round(per);
-    if (per > this._tex) {
-      this._tex = Math.min(4, this._tex + 1);
-      this._pObj.setTexture('cup-' + this._tex);
-    }
+  set x(x) {
+    this._x = x;
+  }
+
+  get x() {
+    return this._x;
+  }
+
+  set y(y) {
+    this._y = y;
+  }
+
+  get y() {
+    return this._y;
+  }
+
+  set rot(rot) {
+    this._rot = rot;
+  }
+
+  get rot() {
+    return this._rot;
+  }
+
+  set bound(bound) {
+    this._bound = bound;
+  }
+
+  get bound() {
+    return this._bound;
+  }
+
+  get scale() {
+    return this._scale;
   }
 }

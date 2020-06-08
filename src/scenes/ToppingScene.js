@@ -71,7 +71,7 @@ class ToppingScene extends Phaser.Scene {
 
   update() {
     if (this.shouldRefresh) {
-      console.log(this.cup);
+      // console.log(this.cup);
       this.shouldRefresh = false;
       let cupSprite = this.add.sprite(400, 400, 'cup-' + this.cup.tex)
         .setScale(1.0)
@@ -89,10 +89,11 @@ class ToppingScene extends Phaser.Scene {
   }
 
   addTopping(x, y, scale, tex) {
-    let wrapper = new Topping(this.topId++, tex);
+    let wrapper = new Topping(this.topId++, tex, scale);
+    let rot = Math.PI * 2 * Math.random();
     let top = this.physics.add.image(x, y, tex)
       .setScale(scale)
-      .setRotation(Math.PI * 2 * Math.random());
+      .setRotation(rot);
     top.body.setAllowGravity(true);
     top.body.setCollideWorldBounds(true, 0.1);
 
@@ -115,6 +116,7 @@ class ToppingScene extends Phaser.Scene {
 
     }
     wrapper.pObj = top;
+    wrapper.rot = rot;
     this.toppings.push(wrapper);
   }
 
@@ -137,6 +139,15 @@ class ToppingScene extends Phaser.Scene {
     }
   }
 
+  prepareForReview() {
+    for (let t of this.toppings) {
+      t.x = t.pObj.x;
+      t.y = t.pObj.y;
+      t.bound = t.pObj.getBounds();
+      // Rotation was set at spawn
+    }
+  }
+
   destroyToppings() {
     for (let t of this.toppings) {
       t.pObj.destroy();
@@ -148,6 +159,7 @@ class ToppingScene extends Phaser.Scene {
     this.cup.pObj.destroy();
     this.cup = null;
     this.destroyToppings();
+    console.log(this.toppings);
   }
 }
 

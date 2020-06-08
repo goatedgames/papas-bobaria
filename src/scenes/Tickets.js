@@ -115,6 +115,7 @@ class Tickets extends Phaser.Scene {
         this.serveArea.getBounds(),
         this.lastSelected.getBounds()
       )) {
+        this.scene.get('ToppingScene').prepareForReview();
         this.scene.switch('ReviewScene');
         this.scene.bringToTop('ReviewScene');
         // Unfortunately, scene.start shuts down the current scene. We have to do this to pass the order data to ReviewScene.

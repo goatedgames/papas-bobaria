@@ -78,7 +78,7 @@ class OrderScene extends Phaser.Scene {
 
   createRandomOrder() {
     let o = new Order(this.currentNum++);
-    const possible = ['pearls', 'lychee jelly', 'mango jelly'];
+    const possible = ['pearls', 'lychee jelly', 'mango jelly', 'ice'];
     for (let choice of possible) {
       if (Math.random() < 0.5) {
         o.addTopping(choice);
