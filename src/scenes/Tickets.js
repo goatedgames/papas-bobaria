@@ -37,6 +37,7 @@ class Tickets extends Phaser.Scene {
   update() {
   }
 
+  // Finds an empty spot to place a new ticket by just stupidly taking the max x of any non-enlarged ticket.
   findEmptySpot() {
     let best = 0;
     for (let t of this.tickets) {
@@ -48,6 +49,7 @@ class Tickets extends Phaser.Scene {
   }
 
   addTicket(order) {
+    // Visual parts of the ticket
     const black = '0x050505';
 
     let components = [];
@@ -86,6 +88,7 @@ class Tickets extends Phaser.Scene {
     cont.setScale(0.3, 0.3);
     cont.setPosition(this.findEmptySpot(), 50);
 
+    // Input parts of the ticket, although not sure if these should go in create()
     this.input.setDraggable(cont);
     this.input.on('drag', (pointer, t, dragX, dragY) => {
       t.x = dragX;
@@ -98,6 +101,7 @@ class Tickets extends Phaser.Scene {
       this.lastSelected = t;
     });
     this.input.on('dragend', (pointer, dragX, dragY, dropped) => {
+      // Sometimes there's a phantom event that errors because this ticket has already been removed.
       if (this.lastSelected === null) {
         return;
       }
@@ -108,8 +112,10 @@ class Tickets extends Phaser.Scene {
       )) {
         this.scene.switch('ReviewScene');
         this.scene.bringToTop('ReviewScene');
+        // Unfortunately, scene.start shuts down the current scene. We have to do this to pass the order data to ReviewScene.
         this.selectedOrder = this.lastSelected.getData('order');
-        // this.data.set('gOrder', this.lastSelected.getData('order'));
+        
+        // Finally, destroy this ticket before the scene is switched.
         this.lastSelected = null;
         for (let i = 0; i < this.tickets.length; i++) {
           if (this.selectedOrder.num === this.tickets[i].getData('order').num) {
@@ -126,6 +132,7 @@ class Tickets extends Phaser.Scene {
     this.tickets.push(cont);
   }
 
+  // More hacky stuff
   showServe() {
     this.serveArea.setVisible(true);
   }

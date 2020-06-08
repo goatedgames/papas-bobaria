@@ -2,12 +2,22 @@ import Phaser from 'phaser';
 
 import { WIDTH, HEIGHT} from '../constants';
 
+// This is an invisible scene that loads the rest of the scenes in the correct order.
 class Loader extends Phaser.Scene {
   constructor() {
       super({ key: 'Loader' });
   }
 
   preload() {
+    this.load.image('sky', 'assets/sky.png');
+    this.load.image('star', 'assets/star.png');
+    this.load.image('dispenser', 'assets/dispenser.png');
+    this.load.image('take-order', 'assets/take-order-button.png');
+    this.load.image('cup-0', 'assets/cup-0.png');
+    this.load.image('cup-1', 'assets/cup-1.png');
+    this.load.image('cup-2', 'assets/cup-2.png');
+    this.load.image('cup-3', 'assets/cup-3.png');
+    this.load.image('cup-4', 'assets/cup-4.png');
   }
 
   create() {

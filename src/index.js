@@ -35,8 +35,3 @@ const config = {
 };
 
 let game = new Phaser.Game(config);
-// game.scene.add('OrderScene', OrderScene);
-// game.scene.add('BrewScene', BrewScene);
-// game.scene.add('ToppingScene', ToppingScene);
-// game.scene.add('ServeScene', ServeScene);
-// game.scene.start('OrderScene');

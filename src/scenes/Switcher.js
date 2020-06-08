@@ -13,6 +13,7 @@ class Switcher extends Phaser.Scene {
   }
 
   create() {
+    // Ew. I don't know any better way to make a switcher in Phaser.
     this.buttons.orderButton = this.add.text(50, 550, 'Order\nStation')
       .setInteractive()
       .on('pointerdown', () => {

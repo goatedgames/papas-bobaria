@@ -14,8 +14,6 @@ class OrderScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('sky', 'assets/sky.png');
-    this.load.image('star', 'assets/star.png');
   }
 
   create() {
@@ -24,11 +22,13 @@ class OrderScene extends Phaser.Scene {
 
     this.addCustomer();
     
-    this.takeOrderButton = this.add.text(300, HEIGHT / 2, 'Take Order', { fill: '#0f0' })
+    // this.takeOrderButton = this.add.text(300, HEIGHT / 2, 'Take Order', { fill: '#0f0' })
+    this.takeOrderButton = this.add.image(300, 200, 'take-order')
+      .setScale(0.35)
       .setInteractive()
       .on('pointerdown', () => {
         this.dequeFirstCustomer();
-      })
+      });
     this.takeOrderButton.visible = false;
     
     this.mytext = this.add.text(400, 300, '', { fill: '#0f0' })
@@ -47,6 +47,7 @@ class OrderScene extends Phaser.Scene {
           this.customers[i].setVelocityX(0);
         if (i == 0) {
           this.takeOrderButton.visible = true;
+          this.takeOrderButton.x = this.customers[i].x;
         }
       } else {
         if (this.customers[i] !== null)
