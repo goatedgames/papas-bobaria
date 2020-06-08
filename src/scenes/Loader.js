@@ -11,6 +11,7 @@ class Loader extends Phaser.Scene {
   preload() {
     this.load.image('sky', 'assets/sky.png');
     this.load.image('star', 'assets/star.png');
+    this.load.image('platform', 'assets/platform.png');
     this.load.image('dispenser', 'assets/dispenser.png');
     this.load.image('take-order', 'assets/take-order-button.png');
     this.load.image('cup-0', 'assets/cup-0.png');

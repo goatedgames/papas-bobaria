@@ -62,6 +62,7 @@ class OrderScene extends Phaser.Scene {
 
   addCustomer() {
     const cust = this.physics.add.sprite(WIDTH + 10, HEIGHT / 2, 'star');
+    cust.body.setAllowGravity(false);
     cust.setVelocityX(-200);
     this.customers.push(cust);
     this.lastCustomer = this.time.now;
