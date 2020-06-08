@@ -43,7 +43,8 @@ class Loader extends Phaser.Scene {
     this.add.image(400, 300, 'splash-screen')
       .setScale(0.578);
     this.time.addEvent({
-      delay: 3000,
+      // delay: 3000,
+      delay: 10,
       callback: this.startGame,
       callbackScope: this,
       loop: false

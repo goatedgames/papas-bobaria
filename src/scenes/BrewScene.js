@@ -65,6 +65,8 @@ class BrewScene extends Phaser.Scene {
 
     this.nextZone = this.add.rectangle(725, 525, 100, 100)
       .setStrokeStyle(5, '#ff0000');
+    this.add.text(725, 525, 'Drag\nCup\nFor\nToppings', { align: 'center' })
+      .setOrigin(0.5);
   }
 
   update() {
@@ -122,8 +124,9 @@ class BrewScene extends Phaser.Scene {
           cup.getBounds()
         )) {
           // Hacky again, but what can ya do
-          this.scene.get('ToppingScene').cup = cupData;
-          this.scene.get('ToppingScene').shouldRefresh = true;
+          this.scene.get('ToppingScene').changeCup(cupData);
+          // this.scene.get('ToppingScene').cup = cupData;
+          // this.scene.get('ToppingScene').shouldRefresh = true;
 
           // Remove this cup from this scene
           cup.destroy();

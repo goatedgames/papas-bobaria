@@ -4,7 +4,7 @@ import { WIDTH, HEIGHT } from '../constants';
 import Topping from '../Topping';
 
 class ToppingScene extends Phaser.Scene {
-  cup;
+  cup = null;
   shouldRefresh = false;
   dropping = false;
   timer;
@@ -53,14 +53,14 @@ class ToppingScene extends Phaser.Scene {
       });
 
     this.add.image(200, 200, 'mango')
-      .setScale(0.1)
+      .setScale(0.08)
       .setInteractive()
       .on('pointerdown', () => {
         this.dropType(0.03, 'mango');
       });
 
     this.add.image(80, 200, 'lychee')
-      .setScale(0.1)
+      .setScale(0.08)
       .setInteractive()
       .on('pointerdown', () => {
         this.dropType(0.03, 'lychee');
@@ -70,18 +70,6 @@ class ToppingScene extends Phaser.Scene {
   }
 
   update() {
-    if (this.shouldRefresh) {
-      // console.log(this.cup);
-      this.shouldRefresh = false;
-      let cupSprite = this.add.sprite(400, 400, 'cup-' + this.cup.tex)
-        .setScale(1.0)
-        .setAlpha(0.75);
-      this.cup.pObj = cupSprite;
-      // this.cupTester.setY(0);
-
-      this.destroyToppings();
-    }
-
     if (this.dropping) {
       let pointer = this.input.activePointer.position;
       this.spoon.setPosition(pointer.x, pointer.y);
@@ -101,9 +89,6 @@ class ToppingScene extends Phaser.Scene {
     this.physics.add.collider(top, this.platform, (A, B) => {
       A.body.setAllowGravity(false);
     });
-    // this.physics.add.collider(top, this.cupTester, (A, B) => {
-    //   A.body.setAllowGravity(false);
-    // });
     for (let t of this.toppings) {
       if (t.tex !== tex) {
         this.physics.add.collider(top, t.pObj, (A, B) => {
@@ -139,13 +124,31 @@ class ToppingScene extends Phaser.Scene {
     }
   }
 
+  changeCup(cup) {
+    if (this.cup !== null) {
+      this.cup.pObj.destroy();
+    }
+    let cupSprite = this.add.sprite(400, 400, 'cup-' + cup.tex)
+      .setDepth(1)
+      .setScale(1.0)
+      .setAlpha(0.6);
+    this.cup = cup;
+    this.cup.pObj = cupSprite;
+
+    this.destroyToppings();
+  }
+
   prepareForReview() {
+    if (this.cup === null) {
+      return false;
+    }
     for (let t of this.toppings) {
       t.x = t.pObj.x;
       t.y = t.pObj.y;
       t.bound = t.pObj.getBounds();
       // Rotation was set at spawn
     }
+    return true;
   }
 
   destroyToppings() {

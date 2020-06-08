@@ -56,6 +56,7 @@ class ReviewScene extends Phaser.Scene {
       'pearl': 'pearls'
     };
     let cupSprite = this.add.sprite(400, 400, 'cup-' + cup.tex)
+      .setDepth(1)
       .setScale(1.0)
       .setAlpha(0.75)
     for (let t of toppings) {
@@ -73,10 +74,13 @@ class ReviewScene extends Phaser.Scene {
     }
 
     // MARK: Scoring
-    let penaltyBrew = 0;
-    penaltyBrew += this.dist((order.tea - cup.tea) / order.tea);
-    penaltyBrew += this.dist((order.milk - cup.milk) / order.milk);
-    penaltyBrew += this.dist((order.syrup - cup.syrup) / order.syrup);
+    let penaltyBrew = this.dist(order.tea, cup.tea) + this.dist(order.milk, cup.milk) + this.dist(order.syrup, cup.syrup);
+    penaltyBrew /= 3;
+    // let penaltyBrew = Math.max(this.dist(order.tea, cup.tea), this.dist(order.milk, cup.milk), this.dist(order.syrup, cup.syrup));
+    console.log(penaltyBrew, Math.max(0, 100 - 100 * penaltyBrew));
+    // penaltyBrew += this.dist((order.tea - cup.tea) / order.tea);
+    // penaltyBrew += this.dist((order.milk - cup.milk) / order.milk);
+    // penaltyBrew += this.dist((order.syrup - cup.syrup) / order.syrup);
     // range after: [0, 3]
 
     let penaltyTop = 0;
@@ -115,25 +119,27 @@ class ReviewScene extends Phaser.Scene {
     }
     scoreTime = Math.round(Math.min(100, Math.max(0, scoreTime)));
 
-    let scoreBrew = Math.round(Math.min(100, Math.max(0, 100 - 33 * penaltyBrew)));
+    let scoreBrew = Math.round(Math.min(100, Math.max(0, 100 - 100 * penaltyBrew)));
     let scoreTop = Math.round(Math.min(100, Math.max(0, 100 - 100 * penaltyTop - 10 * extra)));
-    let scoreText = this.add.text(125, 125, 'Brew Score: ' + scoreBrew + '%\nTopping Score: ' + scoreTop + '%\nTime Score: ' + scoreTime + '%')
+    let overallScore = Math.round(Math.min(100, Math.max(0, (0.25 * scoreTime + scoreBrew + scoreTop) / 2.25)));
+
+    this.add.text(125, 125, 
+      'Brew Score: ' + scoreBrew + '%\nTopping Score: ' + scoreTop + '%\nTime Score: ' + scoreTime + '%\nOverall: ' + overallScore + '%')
       .setStyle({ align: 'right' });
 
-    let avgScore = (0.25 * scoreTime + scoreBrew + scoreTop) / 2.25;
     let react;
-    if (avgScore < 50) {
+    if (overallScore < 50) {
       react = 'This is terrible and\nyou should feel terrible.';
-    } else if (avgScore < 75) {
+    } else if (overallScore < 75) {
       react = 'Meh.'
-    } else if (avgScore < 90) {
+    } else if (overallScore < 90) {
       react = 'Thank you for this\nrefreshing beverage.'
     } else {
       react = 'This is goated.\nLet me help you dominate\nthe bubble tea industry\nwith robotic automation.'
     }
     this.add.text(500, 125, react); 
 
-    averageScore = (averageScore * served + avgScore) / (served + 1);
+    averageScore = (averageScore * served + overallScore) / (served + 1);
     served += 1;
 
     this.add.text(400, 50, 'Average Score: ' + Math.round(averageScore) + '%\nDrinks Served: ' + served)
@@ -199,7 +205,6 @@ class ReviewScene extends Phaser.Scene {
         .setColor(black)
     );
     offset = 20;
-    console.log(topCount.keys());
     for (let top of topCount.keys()) {
       components.push(
         this.add.text(-50, -25 + offset, top)
@@ -211,10 +216,10 @@ class ReviewScene extends Phaser.Scene {
     cont = this.add.container(150, 300, components)
       .setPosition(150, 400);
 
-    if (avgScore < 33) {
+    if (overallScore < 33) {
       this.physics.add.sprite(WIDTH / 2, 400, 'star')
         .setVelocityY(-100);
-    } else if (avgScore < 66) {
+    } else if (overallScore < 66) {
       this.physics.add.sprite(WIDTH / 2 - 20, 400, 'star')
         .setVelocity(-50, -100);
       this.physics.add.sprite(WIDTH / 2 + 20, 400, 'star')
@@ -232,8 +237,12 @@ class ReviewScene extends Phaser.Scene {
   update() {
   }
 
-  dist(x) {
-    return x * x;
+  dist(want, got) {
+    if (Math.abs(want - got) > 50) {
+      return 1.0;
+    }
+    let d = (want - got) / Math.max(want, 100 - want);
+    return d * d;
   }
 
   sq(x) {

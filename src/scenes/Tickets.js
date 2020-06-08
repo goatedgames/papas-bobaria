@@ -18,6 +18,8 @@ class Tickets extends Phaser.Scene {
 
   create() {
     // this.add.text(20, 20, 'Tickets');
+    this.add.text(725, 25, 'Drag Ticket\nTo Enlarge')
+      .setOrigin(0.5);
 
     let components = [];
     let serveBox = this.add.rectangle(0, 0, 75, 150, '0xdddddd')
@@ -115,22 +117,22 @@ class Tickets extends Phaser.Scene {
         this.serveArea.getBounds(),
         this.lastSelected.getBounds()
       )) {
-        this.scene.get('ToppingScene').prepareForReview();
-        this.scene.switch('ReviewScene');
-        this.scene.bringToTop('ReviewScene');
-        // Unfortunately, scene.start shuts down the current scene. We have to do this to pass the order data to ReviewScene.
-        this.selectedOrder = this.lastSelected.getData('order');
-        
-        // Finally, destroy this ticket before the scene is switched.
-        this.lastSelected = null;
-        for (let i = 0; i < this.tickets.length; i++) {
-          if (this.selectedOrder.num === this.tickets[i].getData('order').num) {
-            this.tickets[i].destroy();
-            this.tickets.splice(i, 1);
-            break;
+        if (this.scene.get('ToppingScene').prepareForReview()) {
+          this.scene.switch('ReviewScene');
+          this.scene.bringToTop('ReviewScene');
+          // Unfortunately, scene.start shuts down the current scene. We have to do this to pass the order data to ReviewScene.
+          this.selectedOrder = this.lastSelected.getData('order');
+          
+          // Finally, destroy this ticket before the scene is switched.
+          this.lastSelected = null;
+          for (let i = 0; i < this.tickets.length; i++) {
+            if (this.selectedOrder.num === this.tickets[i].getData('order').num) {
+              this.tickets[i].destroy();
+              this.tickets.splice(i, 1);
+              break;
+            }
           }
         }
-        console.log(this.tickets);
       }
     });
 
