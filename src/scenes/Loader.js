@@ -32,6 +32,9 @@ class Loader extends Phaser.Scene {
     this.load.image('ice-machine', 'assets/ice-machine.png');
     this.load.image('mango', 'assets/mango.png');
     this.load.image('lychee', 'assets/lychee.png');
+
+    // ReviewScene
+    this.load.image('robot-front', 'assets/robot-front.png');
   }
 
   create() {

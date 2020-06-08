@@ -1,10 +1,11 @@
 export class Order {
-  constructor(num) {
+  constructor(num, time) {
     this._tea = 100;
     this._milk = 25;
     this._syrup = 25;
     this._toppings = [];
     this._num = num;
+    this._time = time;
   }
 
   get num() {
@@ -41,5 +42,9 @@ export class Order {
 
   get toppings() {
     return this._toppings;
+  }
+
+  get time() {
+    return this._time;
   }
 }

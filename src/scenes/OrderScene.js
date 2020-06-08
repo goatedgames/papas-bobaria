@@ -23,7 +23,7 @@ class OrderScene extends Phaser.Scene {
     this.addCustomer();
     
     // this.takeOrderButton = this.add.text(300, HEIGHT / 2, 'Take Order', { fill: '#0f0' })
-    this.takeOrderButton = this.add.image(300, 200, 'take-order')
+    this.takeOrderButton = this.add.image(100, 400, 'take-order')
       .setScale(0.35)
       .setInteractive()
       .on('pointerdown', () => {
@@ -36,18 +36,19 @@ class OrderScene extends Phaser.Scene {
 
   update(time) {
     for (let i = 0; i < this.customers.length; i++) {
+      this.customers[i].setY(400);
       let limit;
       if (i == 0) {
         limit = 300;
       } else {
-        limit = this.customers[i - 1].x + 50;
+        limit = this.customers[i - 1].x + 100;
       }
       if (this.customers[i].x < limit) {
         if (this.customers[i] !== null)
           this.customers[i].setVelocityX(0);
         if (i == 0) {
           this.takeOrderButton.visible = true;
-          this.takeOrderButton.x = this.customers[i].x;
+          this.takeOrderButton.x = this.customers[i].x - 125;
         }
       } else {
         if (this.customers[i] !== null)
@@ -61,8 +62,11 @@ class OrderScene extends Phaser.Scene {
   }
 
   addCustomer() {
-    const cust = this.physics.add.sprite(WIDTH + 10, HEIGHT / 2, 'star');
+    const cust = this.physics.add.image(900, 400, 'robot-side')
+      .setScale(0.5)
+      .setY(400);
     cust.body.setAllowGravity(false);
+    cust.body.setCollideWorldBounds(false);
     cust.setVelocityX(-200);
     this.customers.push(cust);
     this.lastCustomer = this.time.now;
@@ -77,7 +81,7 @@ class OrderScene extends Phaser.Scene {
   }
 
   createRandomOrder() {
-    let o = new Order(this.currentNum++);
+    let o = new Order(this.currentNum++, this.time.now);
     const possible = ['pearls', 'lychee jelly', 'mango jelly', 'ice'];
     for (let choice of possible) {
       if (Math.random() < 0.5) {
