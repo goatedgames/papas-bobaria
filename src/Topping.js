@@ -1,11 +1,7 @@
-export default class Cup {
-  constructor(id) {
-    this._tea = 0;
-    this._milk = 0;
-    this._syrup = 0;
-    this._tex = 0;
+export default class Topping {
+  constructor(id, tex) {
     this._id = id;
-    this._pObj = null;
+    this._tex = tex;
   }
 
   get pObj() {

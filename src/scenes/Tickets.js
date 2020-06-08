@@ -25,12 +25,17 @@ class Tickets extends Phaser.Scene {
 
     components.push(
       serveBox,
-      this.add.text(-30, 0, 'Drag to\nServe')
+      this.add.text(0, 0, 'Drag\nTicket\nto\nServe')
+        .setColor('#0f0f0f')
+        .setStyle({
+          align: 'center'
+        })
+        .setOrigin(0.5)
     );
 
     // This is hacky, but I don't know any other way to move the gameObject between scenes
     this.serveArea = this.add.container(75, 150, components)
-      .setPosition(400, 300);
+      .setPosition(700, 500);
     this.serveArea.setVisible(false);
   }
 
@@ -93,7 +98,7 @@ class Tickets extends Phaser.Scene {
     this.input.on('drag', (pointer, t, dragX, dragY) => {
       t.x = dragX;
       t.y = dragY;
-      if (t.x > 600) {
+      if (t.x > 600 && t.y < 300) {
         t.setScale(1, 1);
       } else {
         t.setScale(0.3, 0.3);

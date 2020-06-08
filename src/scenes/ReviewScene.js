@@ -24,10 +24,11 @@ class ReviewScene extends Phaser.Scene {
       .setInteractive()
       .on('pointerdown', () => {
         this.scene.stop();
-        this.scene.bringToTop('ServeScene');
+        this.scene.bringToTop('ToppingScene');
         this.scene.bringToTop('Switcher');
         this.scene.bringToTop('Tickets');
         this.scene.wake('Tickets');
+        this.scene.get('ToppingScene').clear();
       });
     
     // console.log(this.data.get('gOrder'));

@@ -19,6 +19,12 @@ class Loader extends Phaser.Scene {
     this.load.image('cup-2', 'assets/cup-2.png');
     this.load.image('cup-3', 'assets/cup-3.png');
     this.load.image('cup-4', 'assets/cup-4.png');
+    this.load.image('pearl', 'assets/pearl.png');
+    this.load.image('spoon', 'assets/spoon.png');
+    this.load.image('ice-cube', 'assets/ice-cube.png');
+    this.load.image('ice-machine', 'assets/ice-machine.png');
+    this.load.image('mango', 'assets/mango.png');
+    this.load.image('lychee', 'assets/lychee.png');
   }
 
   create() {

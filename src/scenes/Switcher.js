@@ -45,19 +45,19 @@ class Switcher extends Phaser.Scene {
         this.scene.bringToTop('Tickets');
         this.clearAll();
         this.buttons.topButton.setColor('black');
-        this.scene.get('Tickets').hideServe();
-      });
-    
-    this.buttons.serveButton = this.add.text(350, 550, 'Serving\nStation')
-      .setInteractive()
-      .on('pointerdown', () => {
-        this.scene.bringToTop('ServeScene');
-        this.scene.bringToTop('Switcher');
-        this.scene.bringToTop('Tickets');
-        this.clearAll();
-        this.buttons.serveButton.setColor('black');
         this.scene.get('Tickets').showServe();
       });
+    
+    // this.buttons.serveButton = this.add.text(350, 550, 'Serving\nStation')
+    //   .setInteractive()
+    //   .on('pointerdown', () => {
+    //     this.scene.bringToTop('ServeScene');
+    //     this.scene.bringToTop('Switcher');
+    //     this.scene.bringToTop('Tickets');
+    //     this.clearAll();
+    //     this.buttons.serveButton.setColor('black');
+    //     this.scene.get('Tickets').showServe();
+    //   });
   }
 
   update() {
@@ -67,7 +67,7 @@ class Switcher extends Phaser.Scene {
     this.buttons.orderButton.setColor('white');
     this.buttons.brewButton.setColor('white');
     this.buttons.topButton.setColor('white');
-    this.buttons.serveButton.setColor('white');
+    // this.buttons.serveButton.setColor('white');
   }
 }
 

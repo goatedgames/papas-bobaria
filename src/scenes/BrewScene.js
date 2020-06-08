@@ -9,9 +9,11 @@ class BrewScene extends Phaser.Scene {
   cupTester;
   occupied = null;
   cups = [];
+  cupId = 0;
   teaButton;
   milkButton;
   syrupButton;
+  nextZone;
 
   constructor() {
       super({ key: 'BrewScene' });
@@ -60,6 +62,9 @@ class BrewScene extends Phaser.Scene {
         let c = this.addCup();
         this.cups.push(c);
       });
+
+    this.nextZone = this.add.rectangle(725, 525, 100, 100)
+      .setStrokeStyle(5, '#ff0000');
   }
 
   update() {
@@ -101,6 +106,7 @@ class BrewScene extends Phaser.Scene {
   }
 
   addCup() {
+    let cupData = new Cup(this.cupId++);
     let cup = this.physics.add.sprite(60, 300, 'cup-0')
       .setScale(0.5)
       .setInteractive({ draggable: true })
@@ -110,16 +116,33 @@ class BrewScene extends Phaser.Scene {
       .on('drag', (_, dragX, dragY) => {
         cup.setPosition(dragX, dragY);
       })
+      .on('dragend', (pointer, dragX, dragY, dropped) => {
+        if (Phaser.Geom.Rectangle.Overlaps(
+          this.nextZone.getBounds(),
+          cup.getBounds()
+        )) {
+          // Hacky again, but what can ya do
+          this.scene.get('ToppingScene').cup = cupData;
+          this.scene.get('ToppingScene').shouldRefresh = true;
+
+          // Remove this cup from this scene
+          cup.destroy();
+          for (let i = 0; i < this.cups.length; i++) {
+            if (this.cups[i].id === cupData.id) {
+              this.cups.splice(i, 1);
+              break;
+            }
+          }
+        }
+      })
       .on('pointerup', () => {
         cup.body.setAllowGravity(true);
       });
     cup.body.setCollideWorldBounds(true, 0.1);
     cup.body.setAllowGravity(true);
     this.physics.add.collider(cup, this.platform);
-    this.physics.add.collider(cup, this.cupTester, (A, B) => {
-      console.log(A);
-    });
-    return new Cup(cup);
+    cupData.pObj = cup;
+    return cupData;
   }
 
   refreshText(cup) {
