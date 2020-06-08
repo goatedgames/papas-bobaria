@@ -54,8 +54,9 @@ class Loader extends Phaser.Scene {
   }
   
   startGame() {
-    let music = this.sound.add('orion');
-    music.setVolume(0.25);
+    let music = this.sound.add('orion')
+      .setLoop(true)
+      .setVolume(0.25);
     music.play();
 
     this.scene.launch('BrewScene');
