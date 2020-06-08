@@ -9,7 +9,15 @@ class ReviewScene extends Phaser.Scene {
   order;
 
   constructor() {
-      super({ key: 'ReviewScene' });
+      super({ 
+        key: 'ReviewScene',
+        physics: {
+          default: 'arcarde',
+          arcade: {
+            gravity: { y: 200 }
+          }
+        }
+      });
   }
 
   preload() {
@@ -66,20 +74,39 @@ class ReviewScene extends Phaser.Scene {
 
     // MARK: Scoring
     let penaltyBrew = 0;
-    penaltyBrew += this.dist(order.tea - cup.tea);
-    penaltyBrew += this.dist(order.milk - cup.milk);
-    penaltyBrew += this.dist(order.syrup - cup.syrup);
+    penaltyBrew += this.dist((order.tea - cup.tea) / order.tea);
+    penaltyBrew += this.dist((order.milk - cup.milk) / order.milk);
+    penaltyBrew += this.dist((order.syrup - cup.syrup) / order.syrup);
     // range after: [0, 3]
+
     let penaltyTop = 0;
+    // Check requested toppings
     for (let t of order.toppings) {
       let num = 0;
       if (topCount.has(t)) {
         num = topCount.get(t);
       }
-      penaltyTop += Math.max(0, 1 - num / 10);
+      penaltyTop += Math.max(0, 1 - num / 5);
+    }
+    if (order.toppings.length > 0) {
+      penaltyTop /= order.toppings.length;
     }
 
-    let penaltyTime = Math.atan((60000 - (this.time.now - order.time)) / 120000) / (Math.PI / 2);
+    // Check for extra toppings
+    let extra = 0;
+    for (let t of topCount.keys()) {
+      let want = false;
+      for (let s of order.toppings) {
+        if (s === t) {
+          want = true;
+        }
+      }
+      if (!want) {
+        extra += 1;
+      }
+    }
+
+    let penaltyTime = Math.atan((30000 - (this.time.now - order.time)) / 120000) / (Math.PI / 2);
     let scoreTime;
     if (penaltyTime < 0) {
       scoreTime = 100 + penaltyTime * 80;
@@ -89,7 +116,7 @@ class ReviewScene extends Phaser.Scene {
     scoreTime = Math.round(Math.min(100, Math.max(0, scoreTime)));
 
     let scoreBrew = Math.round(Math.min(100, Math.max(0, 100 - 33 * penaltyBrew)));
-    let scoreTop = Math.round(Math.min(100, Math.max(0, 100 - 33 * penaltyTop)));
+    let scoreTop = Math.round(Math.min(100, Math.max(0, 100 - 100 * penaltyTop - 10 * extra)));
     let scoreText = this.add.text(125, 125, 'Brew Score: ' + scoreBrew + '%\nTopping Score: ' + scoreTop + '%\nTime Score: ' + scoreTime + '%')
       .setStyle({ align: 'right' });
 
@@ -186,19 +213,19 @@ class ReviewScene extends Phaser.Scene {
 
     if (avgScore < 33) {
       this.physics.add.sprite(WIDTH / 2, 400, 'star')
-        .setVelocityY(-50);
+        .setVelocityY(-100);
     } else if (avgScore < 66) {
       this.physics.add.sprite(WIDTH / 2 - 20, 400, 'star')
-        .setVelocityY(-50);
+        .setVelocity(-50, -100);
       this.physics.add.sprite(WIDTH / 2 + 20, 400, 'star')
-        .setVelocityY(-50);
+        .setVelocity(50, -100);
     } else {
       this.physics.add.sprite(WIDTH / 2 - 30, 400, 'star')
-        .setVelocityY(-50);
+        .setVelocity(-50, -100);
       this.physics.add.sprite(WIDTH / 2 - 0, 400, 'star')
-        .setVelocityY(-50);
+        .setVelocityY(-100);
       this.physics.add.sprite(WIDTH / 2 + 30, 400, 'star')
-        .setVelocityY(-50);
+        .setVelocity(50, -100);
     }
   }
 
@@ -206,8 +233,7 @@ class ReviewScene extends Phaser.Scene {
   }
 
   dist(x) {
-    x = x / 100;
-    return x * x * x * x;
+    return x * x;
   }
 
   sq(x) {

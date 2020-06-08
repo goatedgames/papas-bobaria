@@ -1,7 +1,5 @@
 import Phaser from 'phaser';
 
-import { WIDTH, HEIGHT} from '../constants';
-
 // This is an invisible scene that loads the rest of the scenes in the correct order.
 class Loader extends Phaser.Scene {
   constructor() {
@@ -9,9 +7,13 @@ class Loader extends Phaser.Scene {
   }
 
   preload() {
+    this.load.image('splash-screen', 'assets/splash.png');
+
     this.load.image('sky', 'assets/sky.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('platform', 'assets/platform.png');
+
+    this.load.audio('orion', 'assets/orion.m4a');
 
     // OrderScene
     this.load.image('take-order', 'assets/take-order-button.png');
@@ -38,6 +40,24 @@ class Loader extends Phaser.Scene {
   }
 
   create() {
+    this.add.image(400, 300, 'splash-screen')
+      .setScale(0.578);
+    this.time.addEvent({
+      delay: 3000,
+      callback: this.startGame,
+      callbackScope: this,
+      loop: false
+    });
+  }
+
+  update() {
+  }
+  
+  startGame() {
+    let music = this.sound.add('orion');
+    music.setVolume(0.25);
+    music.play();
+
     this.scene.launch('BrewScene');
     this.scene.launch('ToppingScene');
     this.scene.launch('ServeScene');
@@ -47,10 +67,7 @@ class Loader extends Phaser.Scene {
     this.scene.bringToTop('OrderScene');
     this.scene.bringToTop('Switcher');
     this.scene.bringToTop('Tickets');
-    console.log("Loader done");
-  }
-
-  update() {
+    this.scene.stop();
   }
 }
 

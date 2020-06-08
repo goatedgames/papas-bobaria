@@ -17,7 +17,7 @@ class Tickets extends Phaser.Scene {
   }
 
   create() {
-    this.add.text(20, 20, 'Tickets');
+    // this.add.text(20, 20, 'Tickets');
 
     let components = [];
     let serveBox = this.add.rectangle(0, 0, 75, 150, '0xdddddd')
